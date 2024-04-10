@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934282878778",
+    "project_id": "houseswap-e9720",
+    "storage_bucket": "houseswap-e9720.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934282878778:android:95714bab2691b30e473a03",
+        "android_client_info": {
+          "package_name": "com.example.signin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxTf2L3ly-JkerhkSXUWKERoIEF6DgXZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
