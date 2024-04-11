@@ -2,16 +2,17 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:signin/components/search_bar.dart';
+import 'package:signin/components/scroll_listview_homes.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
-  final user = FirebaseAuth.instance.currentUser!;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
-  }
+class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      // SearchBarDest(),
-      body: SearchBarDest(),
+      body: ScrollViewHomes(),
     );
   }
 }
