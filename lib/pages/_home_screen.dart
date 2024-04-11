@@ -29,7 +29,7 @@ class HomeScreenState extends State<HomeScreen> {
         children: [
           const Divider(
             color: Color.fromARGB(255, 194, 190, 190),
-            thickness: .5,
+            thickness: 0.5,
           ),
           BottomNavigationBar(
             items: const [

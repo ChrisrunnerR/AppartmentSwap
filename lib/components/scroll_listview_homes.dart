@@ -22,7 +22,7 @@ class ScrollViewHomes extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Container(
                   height: 200,
                   color: Colors.deepPurple[200],
