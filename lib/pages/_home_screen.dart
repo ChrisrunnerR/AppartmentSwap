@@ -1,9 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:signin/pages/account_page.dart';
 import 'package:signin/pages/home_page.dart';
 import 'package:signin/pages/inbox_page.dart';
+import 'package:signin/pages/saved_vacay.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,6 +14,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   final _pageOptions = [
     HomePage(),
+    SavedVacay(),
     InboxPage(),
     AccountPage(),
   ];
@@ -22,30 +22,48 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: _pageOptions[selectedPage],
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 30),
-                label: 'Home'), // Changed 'title' to 'label'
-            BottomNavigationBarItem(
-                icon: Icon(Icons.mail, size: 30),
-                label: 'Inbox'), // Changed 'title' to 'label'
-            BottomNavigationBarItem(
+      backgroundColor: Colors.white,
+      body: _pageOptions[selectedPage],
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Divider(
+            color: Color.fromARGB(255, 194, 190, 190),
+            thickness: .5,
+          ),
+          BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.house, size: 30),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite, size: 30),
+                label: 'Saved',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.inbox_outlined, size: 30),
+                label: 'Messages',
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle, size: 30),
-                label: 'Account'), // Changed 'title' to 'label'
-          ],
-          selectedItemColor: Colors.green,
-          elevation: 5.0,
-          unselectedItemColor: Colors.green[900],
-          currentIndex: selectedPage,
-          backgroundColor: Colors.white,
-          onTap: (index) {
-            setState(() {
-              selectedPage = index;
-            });
-          },
-        ));
+                label: 'Account',
+              ),
+            ],
+            selectedItemColor: Colors.green,
+            elevation: 5.0,
+            unselectedItemColor: Colors.green[900],
+            currentIndex: selectedPage,
+            backgroundColor: Colors.white,
+            showUnselectedLabels: true, // Show labels for all items
+            onTap: (index) {
+              setState(() {
+                selectedPage = index;
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
