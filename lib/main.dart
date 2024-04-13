@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:signin/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'firebase_options.dart';
 
 void main() async {

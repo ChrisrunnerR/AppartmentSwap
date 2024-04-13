@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:signin/pages/home_page.dart';
 import 'package:signin/auth/login_or_register_page.dart';
 import 'package:signin/pages/login_page.dart';
-import 'package:signin/auth/_home_screen.dart';
+import 'package:signin/pages/_home_screen.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});

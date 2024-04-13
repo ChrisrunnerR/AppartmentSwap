@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:signin/components/search_bar.dart';
 
 class ScrollViewHomes extends StatelessWidget {
@@ -8,43 +9,56 @@ class ScrollViewHomes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        SearchBarDest(),
-        Expanded(
-          child: ListView(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  color: Colors.deepPurple[200],
-                ),
+        Column(
+          children: [
+            SearchBarDest(),
+            Expanded(
+              child: ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 200,
+                      color: Colors.deepPurple[200],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 200,
+                      color: Colors.deepPurple[200],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 200,
+                      color: Colors.deepPurple[200],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 200,
+                      color: Colors.deepPurple[200],
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  color: Colors.deepPurple[200],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  color: Colors.deepPurple[200],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  color: Colors.deepPurple[200],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+        Positioned(
+          bottom: 20,
+          right: 150,
+          child: Container(
+            height: 100,
+            width: 100,
+            color: Colors.amber,
+          ),
+        )
       ],
     );
   }
