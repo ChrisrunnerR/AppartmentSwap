@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:signin/components/map_button.dart';
 import 'package:signin/components/search_bar.dart';
 
 class ScrollViewHomes extends StatelessWidget {
@@ -50,15 +51,8 @@ class ScrollViewHomes extends StatelessWidget {
             ),
           ],
         ),
-        Positioned(
-          bottom: 20,
-          right: 150,
-          child: Container(
-            height: 100,
-            width: 100,
-            color: Colors.amber,
-          ),
-        )
+        //add on rand component
+        MapButton(),
       ],
     );
   }

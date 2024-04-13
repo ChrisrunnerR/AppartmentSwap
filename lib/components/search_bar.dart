@@ -10,7 +10,7 @@ class SearchBarDest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130.0,
+      height: 75.0,
       child: Stack(
         children: [
           Positioned(
@@ -19,7 +19,7 @@ class SearchBarDest extends StatelessWidget {
             top: 16.0,
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(

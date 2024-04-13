@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:signin/components/scroll_listview_homes.dart';
+import 'package:signin/components/search_bar.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
