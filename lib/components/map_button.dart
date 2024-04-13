@@ -45,12 +45,17 @@ void _showMapModal(BuildContext context) {
       return FractionallySizedBox(
         heightFactor: 0.9,
         child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white, // Apply color here within decoration
-            borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25)), // Match modal shape
-          ),
-        ),
+            decoration: const BoxDecoration(
+              color: Colors.white, // Apply color here within decoration
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(25)), // Match modal shape
+            ),
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(37.4223, -122.0848),
+                zoom: 13,
+              ),
+            )),
       );
     },
   );
