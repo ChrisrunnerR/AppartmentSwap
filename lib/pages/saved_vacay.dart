@@ -11,15 +11,21 @@ class SavedVacay extends StatefulWidget {
 }
 
 class _SavedVacayState extends State<SavedVacay> {
-  static const LatLng _pGooglePlex = LatLng(37.4223, -122.0848);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: _pGooglePlex,
-        zoom: 13,
-      ),
-    ));
+        appBar: AppBar(
+          title: Text(
+            "Saved",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Center(
+          child: Text("saved page "),
+        ));
   }
 }

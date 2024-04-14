@@ -14,7 +14,6 @@ class ScrollViewHomes extends StatelessWidget {
       children: [
         Column(
           children: [
-            SearchBarDest(),
             Expanded(
               child: ListView(
                 children: [

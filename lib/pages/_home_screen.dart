@@ -27,10 +27,14 @@ class HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Divider(
-            color: Color.fromARGB(255, 194, 190, 190),
-            thickness: 0.5,
-          ),
+          // Container(
+          //   margin: EdgeInsets.zero, // Remove any default margin
+          //   padding: EdgeInsets.zero, // Remove any default padding
+          //   child: const Divider(
+          //     color: Color.fromARGB(255, 194, 190, 190),
+          //     thickness: 0.5,
+          //   ),
+          // ),
           BottomNavigationBar(
             items: const [
               BottomNavigationBarItem(
@@ -51,7 +55,7 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ],
             selectedItemColor: Colors.green,
-            elevation: 5.0,
+            elevation: 0.0,
             unselectedItemColor: Colors.green[900],
             currentIndex: selectedPage,
             backgroundColor: Colors.white,

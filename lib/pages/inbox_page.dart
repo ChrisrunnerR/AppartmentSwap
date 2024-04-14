@@ -5,6 +5,17 @@ class InboxPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Messages",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        centerTitle: true,
+      ),
+    );
   }
 }
