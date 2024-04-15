@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FireStoreService {
   // get collectino of notes
@@ -16,7 +17,7 @@ class FireStoreService {
       'lastName': lastName,
       'email': email,
       'profileImageUrl': profileImageUrl ??
-          'https://santacruzlife.com/wp-content/uploads/2017/12/Tales-of-a-sunset-chaser-valerie-lemke.jpg', // Use a default or handle null appropriately
+          'https://media.gq.com/photos/566ee2e4d388784424105fff/master/w_2066,h_1377,c_limit/GettyImages-495178176.jpg', // Use a default or handle null appropriately
     });
   }
   // Firestore DB
@@ -34,7 +35,7 @@ class FireStoreService {
     return snapshot.data() as Map<String, dynamic>?;
   }
 
-  //update
+  //update pfp
 
   //delete
 }

@@ -1,13 +1,11 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously, unused_element
+// ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print, prefer_const_constructors
 
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-//await FirebaseFirestore.instance.collection("users")
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -17,23 +15,11 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  File? _selectedImage; // Variable to store the selected image
-  final User? user = FirebaseAuth.instance.currentUser; // Get current user
-
-  Future<void> _pickImageFromGallery() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? returnedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    if (returnedImage != null) {
-      setState(() {
-        _selectedImage = File(returnedImage.path);
-      });
-    }
-  }
-
+  File? _selectedImage;
+  final User? user = FirebaseAuth.instance.currentUser;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -42,18 +28,67 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
+  Future<void> _pickImageFromGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? returnedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (returnedImage != null) {
+      setState(() {
+        _selectedImage = File(returnedImage.path);
+      });
+    }
+  }
+
+  Future<String?> uploadImage(File imageFile) async {
+    if (user == null) return null;
+    try {
+      String uploadPath =
+          'profileImages/${user!.uid}/${DateTime.now().toString()}';
+      Reference ref = FirebaseStorage.instance.ref().child(uploadPath);
+      UploadTask uploadTask = ref.putFile(imageFile);
+      TaskSnapshot snapshot = await uploadTask;
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      print("Failed to upload image: $e");
+      return null;
+    }
+  }
+
   Future<void> _updateProfile() async {
-    if (user != null) {
-      try {
-        // Update the user's display name in Firebase
-        await user!.updateDisplayName(
-            '${firstNameController.text.trim()} ${lastNameController.text.trim()}');
-        await user!
-            .reload(); // Reload user data to ensure the update is reflected
-      } catch (error) {
-        print('Failed to update profile: $error');
+    setState(() => _isLoading = true);
+    String? imageUrl;
+    if (_selectedImage != null) {
+      imageUrl = await uploadImage(_selectedImage!);
+      if (imageUrl == null) {
+        setState(() => _isLoading = false);
+        print("Failed to get image URL");
+        return;
       }
     }
+
+    try {
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user!.uid)
+            .set({
+          'firstName': firstNameController.text.trim(),
+          'lastName': lastNameController.text.trim(),
+          'email': user!.email, // Assuming email is unchanged
+          'profileImageUrl':
+              imageUrl ?? user!.photoURL // Use new or existing URL
+        }, SetOptions(merge: true));
+
+        await user!.updateDisplayName(
+            '${firstNameController.text.trim()} ${lastNameController.text.trim()}');
+        await user!.reload(); // Reload user data
+      }
+    } catch (error) {
+      print('Failed to update profile: $error');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+
     Navigator.of(context).pop();
   }
 
@@ -61,13 +96,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     ImageProvider imageProvider;
     if (_selectedImage != null) {
-      imageProvider = FileImage(_selectedImage!); // Use the uploaded image
+      imageProvider = FileImage(_selectedImage!);
     } else if (user?.photoURL != null) {
-      imageProvider = NetworkImage(user!.photoURL!); // Use Firebase photoURL
+      imageProvider = NetworkImage(user!.photoURL!);
     } else {
-      imageProvider =
-          AssetImage('lib/images/default_pfp.jpeg'); // Use a default image
+      imageProvider = AssetImage('lib/images/default_pfp.jpeg');
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Profile"),
@@ -92,13 +127,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                "Update Profile Picture",
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                ),
-              ),
+              _isLoading
+                  ? CircularProgressIndicator()
+                  : Text("Update Profile Picture",
+                      style: TextStyle(color: Colors.grey[700], fontSize: 16)),
               const SizedBox(height: 20),
               TextField(
                 controller: firstNameController,
