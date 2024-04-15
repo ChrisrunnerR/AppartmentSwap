@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +9,7 @@ import 'package:signin/components/my_button.dart';
 import 'package:signin/components/my_textfield.dart';
 import 'package:signin/components/square_tile.dart';
 import 'package:signin/services/auth_service.dart';
+import 'package:signin/services/firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   Function()? onTap;
@@ -22,38 +24,78 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final User? user = FirebaseAuth.instance.currentUser;
-
-// TextEditingController is a listener - everytime
+  FireStoreService firestoreService = FireStoreService();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmedPasswordController = TextEditingController();
-  // sign in user
-  void signUserUp() async {
-    // show loading circle
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
 
-//try creating user
+  @override
+  void dispose() {
+    // Dispose of the controllers when the state is de-allocated.
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmedPasswordController.dispose();
+    super.dispose(); // Always call super.dispose() last.
+  }
+
+  void signUserUp() async {
+    if (passwordController.text != confirmedPasswordController.text) {
+      showErrorMessage("Passwords don't match!");
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
     try {
-      // check if password and confirmed password are the same
-      if (passwordController.text == confirmedPasswordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      User? newUser = userCredential.user;
+      if (newUser != null) {
+        await firestoreService.createUserProfile(
+          newUser, // Pass the User object
+          firstNameController.text.trim(),
+          lastNameController.text.trim(),
+          // Add additional fields if needed, e.g., profileImageUrl
+        );
+        Navigator.pop(context); // Dismiss the loading indicator
+        // Optionally, navigate to another page or show a success message
       } else {
-        // show error message
-        showErrorMessage("passwords don't match!");
+        Navigator.pop(context); // Dismiss the loading indicator
+        showErrorMessage("Failed to create user profile.");
       }
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      showErrorMessage(e.code);
+      Navigator.pop(context); // Always dismiss the loading indicator
+      showErrorMessage(e.message ?? "An error occurred during sign up.");
     }
   }
+
+// // Firestore DB
+//   Future addUserDetails(
+//     user, // do i need this ?
+//     context, // do i need this ?
+//     int userID,
+//     String firstname,
+//     String lastname,
+//     String email,
+//   ) async {
+//     await FirebaseFirestore.instance.collection("user").add({
+//       'uid': userID,
+//       'firstName': firstname,
+//       'lastName': lastname,
+//       'email': email,
+//     });
+//   }
 
   void showErrorMessage(String message) {
     showDialog(
@@ -82,13 +124,13 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 //logo
                 Icon(
                   Icons.airplanemode_active_sharp,
-                  size: 100,
+                  size: 50,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
                 //welcoem back
                 Text(
                   "Welcome Please Fill Out Your Information",
@@ -97,7 +139,20 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
+                // First Name
+                MyTextField(
+                  controller: firstNameController,
+                  hintText: 'First Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  controller: lastNameController,
+                  hintText: 'Last Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
                 //email textfield
                 MyTextField(
                   controller: emailController,
@@ -105,13 +160,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: false,
                 ),
                 //password
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 10),
                 MyTextField(
                   controller: confirmedPasswordController,
                   hintText: 'Confirm Password',
