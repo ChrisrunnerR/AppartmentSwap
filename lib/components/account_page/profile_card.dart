@@ -23,7 +23,7 @@ class _ProfileCardState extends State<ProfileCard> {
           radius: 40, // Adjust the size as needed
           backgroundImage: user?.photoURL != null
               ? NetworkImage(user!.photoURL!)
-              : const AssetImage('images/default_pfp.jpg')
+              : const AssetImage('lib/images/default_pfp.jpeg')
                   as ImageProvider, // Fallback to a local asset image
         ),
         const SizedBox(width: 10), // Space between the image and the text

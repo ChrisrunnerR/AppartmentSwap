@@ -65,7 +65,7 @@ class _SavedVacayState extends State<SavedVacay> {
       imageProvider = NetworkImage(user!.photoURL!); // Use Firebase photoURL
     } else {
       imageProvider =
-          AssetImage('images/default_pfp.jpg'); // Use a default image
+          AssetImage('lib/images/default_pfp.jpeg'); // Use a default image
     }
 
     return Scaffold(
