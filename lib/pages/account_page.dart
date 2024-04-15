@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final user = FirebaseAuth.instance.currentUser;
+
   void _editProfile() {
     Navigator.push(
       context,
@@ -23,6 +24,11 @@ class _AccountPageState extends State<AccountPage> {
 
   void _deleteAccount() {
     // Logic for deleting an account
+  }
+
+  // Sign out function
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -37,6 +43,14 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app), // Icon for signing out
+            onPressed: signUserOut, // Function to execute on pressing the icon
+            tooltip:
+                'Sign Out', // Optional: Adds a small description when long pressed
+          ),
+        ],
       ),
       body: ListView(
         children: [

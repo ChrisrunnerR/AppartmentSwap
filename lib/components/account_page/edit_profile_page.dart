@@ -17,10 +17,25 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final User? user = FirebaseAuth.instance.currentUser;
+  File? _selectedImage; // Variable to store the selected image
+  final User? user = FirebaseAuth.instance.currentUser; // Get current user
+
+  Future<void> _pickImageFromGallery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? returnedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    // Check if an image is selected
+    if (returnedImage != null) {
+      setState(() {
+        _selectedImage =
+            File(returnedImage.path); // Update the UI with the selected image
+      });
+    }
+  }
+
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  ImagePicker imagePicker = ImagePicker();
 
   @override
   void dispose() {
@@ -45,42 +60,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     Navigator.of(context).pop();
   }
 
-  Future<void> _updateProfilePicture() async {
-    // Step 1: Pick an image from the gallery
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      // Step 2: Upload the image to Firebase Storage
-      File file = File(image.path);
-      try {
-        String uploadPath = 'user_images/${user?.uid}/${image.name}';
-        UploadTask uploadTask =
-            FirebaseStorage.instance.ref(uploadPath).putFile(file);
-        TaskSnapshot snapshot = await uploadTask;
-        String imageUrl = await snapshot.ref.getDownloadURL();
-
-        // Step 3: Update the image URL in Firebase Auth (Optional)
-        await user?.updatePhotoURL(imageUrl);
-
-        // Step 4: Update the image URL in Firestore
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(user?.uid)
-            .set({
-          'photoURL': imageUrl,
-        }, SetOptions(merge: true));
-
-        setState(() {
-          // Refresh UI to display the updated image
-        });
-      } catch (e) {
-        print('Error uploading image: $e');
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    ImageProvider imageProvider;
+    if (_selectedImage != null) {
+      imageProvider = FileImage(_selectedImage!); // Use the uploaded image
+    } else if (user?.photoURL != null) {
+      imageProvider = NetworkImage(user!.photoURL!); // Use Firebase photoURL
+    } else {
+      imageProvider =
+          AssetImage('images/default_pfp.jpg'); // Use a default image
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Profile"),
@@ -98,14 +88,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               const SizedBox(height: 20),
               GestureDetector(
-                onTap: _updateProfilePicture,
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: user?.photoURL != null
-                      ? NetworkImage(user!.photoURL!)
-                      : const AssetImage('images/default_pfp.jpg')
-                          as ImageProvider,
+                  backgroundImage: imageProvider,
                 ),
+                // child: CircleAvatar(
+                //   radius: 40,
+                //   backgroundImage: user?.photoURL != null
+                //       ? NetworkImage(user!.photoURL!)
+                //       : const AssetImage('images/default_pfp.jpg')
+                //           as ImageProvider,
+                // ),
               ),
               const SizedBox(height: 20),
               Text(
