@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileCard extends StatefulWidget {
-  ProfileCard({super.key});
-  void Function()? onPressed;
+  final Function()? onPressed;
+
+  const ProfileCard({super.key, this.onPressed});
 
   @override
   State<ProfileCard> createState() => _ProfileCardState();
@@ -17,10 +20,10 @@ class _ProfileCardState extends State<ProfileCard> {
     return Row(
       children: [
         CircleAvatar(
-          radius: 50, // Adjust the size as needed
+          radius: 40, // Adjust the size as needed
           backgroundImage: user?.photoURL != null
               ? NetworkImage(user!.photoURL!)
-              : const AssetImage('assets/default.jpg')
+              : const AssetImage('images/default_pfp.jpg')
                   as ImageProvider, // Fallback to a local asset image
         ),
         const SizedBox(width: 10), // Space between the image and the text
@@ -39,21 +42,15 @@ class _ProfileCardState extends State<ProfileCard> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  //yeah need to figure this out
                   TextButton(
-                    onPressed: widget
-                        .onPressed, // Using the widget's onPressed callback
-                    child:
-                        const Text('Edit', style: TextStyle(color: Colors.red)),
+                    onPressed: widget.onPressed,
+                    child: Text('Edit', style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
-              const Text(
-                "Update account",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
+              const Text("Update account",
+                  style: TextStyle(fontSize: 16, color: Colors.grey))
             ],
           ),
         ),

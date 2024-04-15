@@ -136,11 +136,11 @@ class _LoginPageState extends State<LoginPage> {
                     SquareTile(
                         onTap: () => AuthService().signInWithGoogle(),
                         imagePath: "lib/images/google.jpg"),
-                    const SizedBox(width: 10),
-                    SquareTile(
-                        // changes to apple
-                        onTap: () {},
-                        imagePath: "lib/images/apple.jpg"),
+                    //const SizedBox(width: 10),
+                    // SquareTile(
+                    //     // changes to apple
+                    //     onTap: () {},
+                    //     imagePath: "lib/images/apple.jpg"),
                   ],
                 ),
 

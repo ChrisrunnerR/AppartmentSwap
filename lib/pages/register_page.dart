@@ -21,6 +21,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final User? user = FirebaseAuth.instance.currentUser;
+
 // TextEditingController is a listener - everytime
   final emailController = TextEditingController();
   final passwordController = TextEditingController();

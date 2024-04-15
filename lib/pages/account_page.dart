@@ -2,7 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:signin/components/profile_card.dart';
+import 'package:signin/components/account_page/edit_profile_page.dart';
+import 'package:signin/components/account_page/profile_card.dart';
 
 class AccountPage extends StatefulWidget {
   AccountPage({super.key});
@@ -13,6 +14,16 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final user = FirebaseAuth.instance.currentUser;
+  void _editProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfilePage()),
+    );
+  }
+
+  void _deleteAccount() {
+    // Logic for deleting an account
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +42,9 @@ class _AccountPageState extends State<AccountPage> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
-            child: ProfileCard(), // Directly placing ProfileCard here
+            child: ProfileCard(
+              onPressed: _editProfile,
+            ), // Directly placing ProfileCard here
           ),
         ],
       ),
