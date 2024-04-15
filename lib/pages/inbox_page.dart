@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:signin/services/firestore.dart';
+// Import your FireStoreService
 
 class InboxPage extends StatefulWidget {
   const InboxPage({super.key});
@@ -10,19 +12,33 @@ class InboxPage extends StatefulWidget {
 
 class _InboxPageState extends State<InboxPage> {
   String userId = "";
+  String firstName = "";
+  String lastName = "";
 
   @override
   void initState() {
     super.initState();
+    final fireStoreService =
+        FireStoreService(); // Instance of your Firestore service
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         setState(() {
-          userId = user.uid; // Update the userId with the current user's UID
+          userId = user.uid;
         });
-        print(userId); // This will print the user UID to your debug console
+        // Fetch additional user details
+        fireStoreService.getUserProfile(user.uid).then((userData) {
+          if (userData != null) {
+            setState(() {
+              firstName = userData['firstName'] ?? "";
+              lastName = userData['lastName'] ?? "";
+            });
+          }
+        });
       } else {
         setState(() {
-          userId = "No user logged in"; // Reset or handle a logged-out scenario
+          userId = "No user logged in";
+          firstName = "";
+          lastName = "";
         });
       }
     });
@@ -42,8 +58,9 @@ class _InboxPageState extends State<InboxPage> {
         centerTitle: true,
       ),
       body: Center(
-        // Display the user ID or the message "No user logged in"
-        child: Text(userId.isEmpty ? "No user logged in" : "User ID: $userId"),
+        child: userId.isEmpty
+            ? const Text("No user logged in")
+            : Text("User ID: $userId\nName: $firstName $lastName"),
       ),
     );
   }

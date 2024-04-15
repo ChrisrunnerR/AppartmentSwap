@@ -1,27 +1,60 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
-  signInWithGoogle() async {
-    // bring up interactive sign in process
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-    // Check if the user cancelled the sign-in process
-    if (gUser == null) {
-      // User cancelled the sign-in process, handle accordingly
+  Future<User?> signInWithGoogle() async {
+    try {
+      // Trigger the Google Authentication flow.
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser != null) {
+        // Obtain the auth details from the request.
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        // Create a new credential.
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        // Sign in to Firebase with the Google [UserCredential].
+        final UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+        final User? user = userCredential.user;
+
+        if (user != null) {
+          // Update user data in Firestore
+          updateUserFirestore(user, googleUser);
+        }
+        return user;
+      }
+    } catch (e) {
+      print(e.toString());
       return null;
     }
+    return null;
+  }
 
-    // obtain auth details from request
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+  Future<void> updateUserFirestore(
+      User user, GoogleSignInAccount googleUser) async {
+    DocumentReference userRef = _db.collection('users').doc(user.uid);
 
-    //create a new credential for user
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
-
-    //finall signin
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    return userRef.set(
+        {
+          'firstName': googleUser.displayName
+              ?.split(' ')
+              ?.first, // Assuming displayName is 'First Last'
+          'lastName': googleUser.displayName?.split(' ')?.last,
+          'email': googleUser.email,
+          'profileImageUrl': googleUser.photoUrl ?? 'default_image_url',
+        },
+        SetOptions(
+            merge: true)); // Use merge option to update user data if it exists
   }
 }

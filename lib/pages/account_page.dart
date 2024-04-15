@@ -26,9 +26,12 @@ class _AccountPageState extends State<AccountPage> {
     // Logic for deleting an account
   }
 
-  // Sign out function
   void signUserOut() {
-    FirebaseAuth.instance.signOut();
+    try {
+      FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print('Error signing out: $e');
+    }
   }
 
   @override

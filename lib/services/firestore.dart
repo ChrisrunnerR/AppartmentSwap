@@ -7,11 +7,14 @@ class FireStoreService {
       FirebaseFirestore.instance.collection('users');
 
   //create   -- add in later //  String profileImageUrl
-  Future<void> createUserProfile(User user, String firstName, String lastName,
+  // optional parameters are in [] brackets
+  Future<void> createUserProfile(
+      User user, String firstName, String lastName, String email,
       [String? profileImageUrl]) async {
     await users.doc(user.uid).set({
       'firstName': firstName,
       'lastName': lastName,
+      'email': email,
       'profileImageUrl': profileImageUrl ??
           'default_image_url', // Use a default or handle null appropriately
     });

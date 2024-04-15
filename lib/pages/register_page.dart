@@ -60,15 +60,16 @@ class _RegisterPageState extends State<RegisterPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      Navigator.pop(context); // Dismiss the loading indicator
       User? newUser = userCredential.user;
       if (newUser != null) {
         await firestoreService.createUserProfile(
           newUser, // Pass the User object
           firstNameController.text.trim(),
           lastNameController.text.trim(),
+          emailController.text.trim(),
           // Add additional fields if needed, e.g., profileImageUrl
         );
-        Navigator.pop(context); // Dismiss the loading indicator
         // Optionally, navigate to another page or show a success message
       } else {
         Navigator.pop(context); // Dismiss the loading indicator
@@ -79,23 +80,6 @@ class _RegisterPageState extends State<RegisterPage> {
       showErrorMessage(e.message ?? "An error occurred during sign up.");
     }
   }
-
-// // Firestore DB
-//   Future addUserDetails(
-//     user, // do i need this ?
-//     context, // do i need this ?
-//     int userID,
-//     String firstname,
-//     String lastname,
-//     String email,
-//   ) async {
-//     await FirebaseFirestore.instance.collection("user").add({
-//       'uid': userID,
-//       'firstName': firstname,
-//       'lastName': lastname,
-//       'email': email,
-//     });
-//   }
 
   void showErrorMessage(String message) {
     showDialog(
