@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, avoid_print, use_build_context_synchronously, unused_element
 
 import 'dart:io';
 
@@ -25,11 +25,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final XFile? returnedImage =
         await _picker.pickImage(source: ImageSource.gallery);
 
-    // Check if an image is selected
     if (returnedImage != null) {
       setState(() {
-        _selectedImage =
-            File(returnedImage.path); // Update the UI with the selected image
+        _selectedImage = File(returnedImage.path);
       });
     }
   }
@@ -44,7 +42,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-// need to remove this
   Future<void> _updateProfile() async {
     if (user != null) {
       try {
@@ -87,18 +84,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              GestureDetector(
+              InkWell(
+                onTap: _pickImageFromGallery,
                 child: CircleAvatar(
                   radius: 40,
                   backgroundImage: imageProvider,
                 ),
-                // child: CircleAvatar(
-                //   radius: 40,
-                //   backgroundImage: user?.photoURL != null
-                //       ? NetworkImage(user!.photoURL!)
-                //       : const AssetImage('images/default_pfp.jpg')
-                //           as ImageProvider,
-                // ),
               ),
               const SizedBox(height: 20),
               Text(
