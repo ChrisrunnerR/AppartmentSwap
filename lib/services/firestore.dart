@@ -16,7 +16,7 @@ class FireStoreService {
       'lastName': lastName,
       'email': email,
       'profileImageUrl': profileImageUrl ??
-          'default_image_url', // Use a default or handle null appropriately
+          'https://santacruzlife.com/wp-content/uploads/2017/12/Tales-of-a-sunset-chaser-valerie-lemke.jpg', // Use a default or handle null appropriately
     });
   }
   // Firestore DB
