@@ -3,6 +3,8 @@ import 'package:signin/pages/account_page.dart';
 import 'package:signin/pages/home_page.dart';
 import 'package:signin/pages/inbox_page.dart';
 import 'package:signin/pages/saved_vacay.dart';
+//delete
+import 'package:signin/pages/delete_reference.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class HomeScreenState extends State<HomeScreen> {
     HomePage(),
     SavedVacay(),
     InboxPage(),
+    TrashPage(),
     AccountPage(),
   ];
 
@@ -48,6 +51,10 @@ class HomeScreenState extends State<HomeScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.inbox_outlined, size: 30),
                 label: 'Messages',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.access_time, size: 30),
+                label: 'Trash',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle, size: 30),
